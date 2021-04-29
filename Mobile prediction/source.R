@@ -7,6 +7,9 @@ library(e1071)
 library(yardstick)
 library(ggplot2)
 library(Metrics)
+library(rpart)
+library(rpart.plot)
+library(randomForest)
 #Step 2: Load the data-set
 #train data-set
 df_train=data.frame(read.csv("train.csv"))
@@ -76,13 +79,33 @@ set.seed(0)
 split=sample.split(df_train,SplitRatio=0.8)
 trainc=subset(df_train,split==TRUE)
 testc=subset(df_train,split==FALSE)
-#Step 10 Fitting the model
-classifier = svm(formula = price_range ~ .,
-                 data = trainc,
-                 type = 'C-classification',
-                 kernel = 'linear')
+#Step 10: Fitting the model
+#SVR
+classifier = svm(formula = price_range ~ .,data = trainc,type = 'C-classification',kernel = 'linear')
+#Predicated values of SVR
 y_pred = predict(classifier, testc)
 y_pred
 cm = table(testc[, 21], y_pred)
 cm
-accuracy(y_pred,testc[, 21])
+#accuracy of SVR 
+results_svm=accuracy(y_pred,testc[, 21])
+#predicted values of Decison Tree
+classtree=rpart(formula = price_range ~ .,data = trainc,method="class",control = rpart.control(maxdepth = 3))
+#predcit
+y_pred_tree=predict(classtree, testc,type="class")
+#accuracy of Tree
+results_tree=accuracy(y_pred_tree,testc[, 21])
+#Random Forrest
+classifier_RF = randomForest(formula = price_range ~ .,data = trainc, ntree = 500)
+y_pred_forrest= predict(classifier_RF, testc)
+results_forrst=accuracy(y_pred_forrest,testc[, 21])
+#Step 11: Compare the results
+#barplot to show the results
+H <- c(results_forrst,results_tree,results_svm)
+M <- c("Forrest","Tree","SVR")
+# Give the chart file a name
+png(file = "model_Score.png")
+# Plot the bar chart 
+barplot(H,names.arg=M,xlab="Models",ylab="Accuracy",col="blue",main="ACCURACY",border="red")
+# Save the file
+dev.off()
