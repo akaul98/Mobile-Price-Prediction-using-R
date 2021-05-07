@@ -2,7 +2,7 @@ Mobile Price Prediction using R
 
 Step 1: Install all the important header files and load the data.
 
-Step 2: Display the basic infomation about the Dataset
+Step 2: Display the basic information about the Dataset
 
 Step 3 :Remove Data Duplicates while Retaining the First one - Similar to SQL DISTINCT :
 
@@ -16,9 +16,9 @@ Step 4: Fill or Imputes Missing values with Various Methods
         
 Step 5:Loading the test data after doing completeing step 4
 
-Step 6: Concatinating of test and train data
+Step 6: Concatenating of test and train data
 
-Setp 7: Remove duplicated columns 
+Step 7: Remove duplicated columns 
 
 Step 8: Labelencoder to change the categorical feature into number 
       
@@ -28,11 +28,13 @@ Step 9:  Visualise the data
                 
                 ii)How clean is our data
 
-Step 10:Drop irrelevant features
+Step 10: Drop irrelevant features
 
 Step 11: Create/ modify features
+Concatenating
 
-Step 112:Create dummy variables(For categorical features)
+
+Step 12:Create dummy variables(For categorical features)
 
 Step 13:  Train and test Split()
 
@@ -42,5 +44,5 @@ Step 14: Fit and score the model
                 ii) Random Forrest classifier
                 iii)SVR 
                 
-Step 13:Present the results
+Step 15:Present the results
 
