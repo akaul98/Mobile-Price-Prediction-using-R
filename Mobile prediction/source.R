@@ -44,6 +44,8 @@ cat_list=list("wifi","dual_sim","touch_screen","four_g","three_g","touch_screen"
   res2
 #Step 8:Repeat all the above thinks for test data as well
   df_test=data.frame(read.csv("test.csv"))
+  #remove Id
+
   # Check for info and describe
   sapply(df_test, typeof)
   apply(df_test,2,mean)
@@ -59,7 +61,7 @@ cat_list=list("wifi","dual_sim","touch_screen","four_g","three_g","touch_screen"
   df_test$touch_screen = as.factor(df_test$touch_screen) # converting to categorical
   df_test$n_cores= as.factor(df_test$n_cores) # converting to categorical
   df_test$price_range = as.factor(df_test$price_range)  # converting to categorical
-  str(df_train)
+  str(df_test)
   # check for null values
   sum(is.na(df_test))
   #expolarty data analysis
@@ -74,12 +76,12 @@ cat_list=list("wifi","dual_sim","touch_screen","four_g","three_g","touch_screen"
   res_test <- rcorr(as.matrix(df_test))
   
   res_test
-#Step 9: Split the data into train and test
+#Step 10: Split the data into train and test
 set.seed(0)
 split=sample.split(df_train,SplitRatio=0.8)
 trainc=subset(df_train,split==TRUE)
 testc=subset(df_train,split==FALSE)
-#Step 10: Fitting the model
+#Step 11: Fitting the model
 #SVR
 classifier = svm(formula = price_range ~ .,data = trainc,type = 'C-classification',kernel = 'linear')
 #Predicated values of SVR
@@ -99,7 +101,7 @@ results_tree=accuracy(y_pred_tree,testc[, 21])
 classifier_RF = randomForest(formula = price_range ~ .,data = trainc, ntree = 500)
 y_pred_forrest= predict(classifier_RF, testc)
 results_forrst=accuracy(y_pred_forrest,testc[, 21])
-#Step 11: Compare the results
+#Step 12: Compare the results
 #barplot to show the results
 H <- c(results_forrst,results_tree,results_svm)
 M <- c("Forrest","Tree","SVR")
@@ -109,3 +111,9 @@ png(file = "model_Score.png")
 barplot(H,names.arg=M,xlab="Models",ylab="Accuracy",col="blue",main="ACCURACY",border="red")
 # Save the file
 dev.off()
+
+df_test<-  df_test[setdiff(colnames( df_test), c('id'))]
+pred_test_RF=predict(classifier_RF, df_test)
+pred_test_tree=predict(classtree,df_test,type="class")
+pred_test_svr=predict(classifier,df_test)
+df_test['price_range'] = pred_test_RF
